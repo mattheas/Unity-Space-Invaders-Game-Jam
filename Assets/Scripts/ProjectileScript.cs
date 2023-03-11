@@ -10,19 +10,16 @@ public class ProjectileScript : MonoBehaviour
 
     [SerializeField] private GameObject ParentContainer;
 
-    private AudioSource explosionAudioSource;
+
     private AudioSource invaderDeathAudioSource;
 
-    [SerializeField] private AudioClip explosionClip;
+
     [SerializeField] private AudioClip deathAudioClip;
 
     // Start is called before the first frame update
     void Start()
     {
-        explosionAudioSource = gameObject.AddComponent<AudioSource>();
-        explosionAudioSource.clip = explosionClip;
-        explosionAudioSource.loop = false;
-        explosionAudioSource.playOnAwake = false;
+
 
         invaderDeathAudioSource = gameObject.AddComponent<AudioSource>();
         invaderDeathAudioSource.clip = deathAudioClip;
@@ -39,7 +36,7 @@ public class ProjectileScript : MonoBehaviour
         // projectile destroys itself if it goes off screen
         if (this.transform.localPosition.y > 563f)
         {
-            explosionAudioSource.Play();
+            //explosionAudioSource.Play();
             Debug.Log("Player Projectile goes off screen");
             //ParentContainer.GetComponent<Image>().enabled = false;
             //ParentContainer.GetComponent<BoxCollider2D>().enabled = false;
@@ -56,12 +53,13 @@ public class ProjectileScript : MonoBehaviour
             Debug.Log("Player Projectile collided with Alien");
             // inform player that it has been destroyed to remove the cooldown
             ProjectileDestroyedAction?.Invoke();
-            explosionAudioSource.Play();
+            //explosionAudioSource.Play();
+            invaderDeathAudioSource.Play();
             ParentContainer.GetComponent<Image>().enabled = false;
             ParentContainer.GetComponent<BoxCollider2D>().enabled = false;
 
             // destroy Player Projectile
-            Destroy(ParentContainer, explosionClip.length);
+            Destroy(ParentContainer, deathAudioClip.length);
 
 
             // increase score of player
@@ -71,23 +69,24 @@ public class ProjectileScript : MonoBehaviour
             Debug.Log("Player Projectile collided with Alien Projectile");
             // inform player that it has been destroyed to remove the cooldown
             ProjectileDestroyedAction?.Invoke();
-            explosionAudioSource.Play();
+            //explosionAudioSource.Play();
             invaderDeathAudioSource.Play();
             ParentContainer.GetComponent<Image>().enabled = false;
             ParentContainer.GetComponent<BoxCollider2D>().enabled = false;
 
             // Player Projectile
-            Destroy(ParentContainer, explosionClip.length);
+            Destroy(ParentContainer, deathAudioClip.length);
 
         }
         else if (collision.tag == "BlockCollider")
         {
             ProjectileDestroyedAction?.Invoke();
-            explosionAudioSource.Play();
+            //explosionAudioSource.Play();
             ParentContainer.GetComponent<Image>().enabled = false;
             ParentContainer.GetComponent<BoxCollider2D>().enabled = false;
 
-            Destroy(ParentContainer, explosionClip.length);
+            Destroy(ParentContainer, 0.5f);
+
         }
 
     }

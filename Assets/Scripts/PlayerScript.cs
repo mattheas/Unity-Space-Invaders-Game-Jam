@@ -18,7 +18,8 @@ public class PlayerScript : MonoBehaviour
     private AudioSource shootAudioSource;
     [SerializeField] private AudioClip shootAudioClip;
 
-
+    private AudioSource explosionAudioSource;
+    [SerializeField] private AudioClip explosionClip;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,11 @@ public class PlayerScript : MonoBehaviour
         shootAudioSource.loop = false;
         shootAudioSource.playOnAwake = false;
 
+
+        explosionAudioSource = gameObject.AddComponent<AudioSource>();
+        explosionAudioSource.clip = explosionClip;
+        explosionAudioSource.loop = false;
+        explosionAudioSource.playOnAwake = false;
 
     }
 
@@ -104,6 +110,7 @@ public class PlayerScript : MonoBehaviour
         if (collision.tag == "Alien")
         {
             playerLives--;
+            explosionAudioSource.Play();
 
             if (playerLives <= 0)
             {
@@ -117,6 +124,8 @@ public class PlayerScript : MonoBehaviour
         else if (collision.tag == "AlienProjectile")
         {
             playerLives--;
+            explosionAudioSource.Play();
+
             textLivesLeft.text = "LIVES LEFT: " + playerLives.ToString();
             if (playerLives <= 0)
             {
