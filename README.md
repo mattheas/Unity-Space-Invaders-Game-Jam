@@ -3,7 +3,8 @@
 
 
 
-![space_invaders_main_menu](https://user-images.githubusercontent.com/55373866/224452943-c3246ba7-454a-40d0-aaaa-d13936b632d5.png)
+![space_invaders_main_menu](https://user-images.githubusercontent.com/55373866/224453083-41568f3c-47ab-409d-ab34-31feee820597.png)
+
 
 
 
