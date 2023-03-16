@@ -51,46 +51,23 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int waveNumber = PlayerPrefs.GetInt("wavesBeaten", 0);
+        MainMenuCanvas.SetActive(true);
+        GameCanvas.SetActive(false);
 
-        // just opening game
-        if (waveNumber == 0)
+        sessionScore = 0;
+        textCurrentScore.text = "SCORE: " + sessionScore.ToString();
+
+        // set highscore
+        highestScore = PlayerPrefs.GetInt("highestScore", 0);
+        textHighScore.text = "HIGHSCORE: " + highestScore.ToString();
+
+        textLivesLeft.text = "LIVES LEFT: " + 3.ToString();
+
+        // reset array that tracks which aliens have been destroyed
+        for (int i = 0; i < 11; i++)
         {
-            MainMenuCanvas.SetActive(true);
-            GameCanvas.SetActive(false);
-
-            sessionScore = 0;
-            textCurrentScore.text = "SCORE: " + sessionScore.ToString();
-
-            textLivesLeft.text = "LIVES LEFT: 3";
-
-            // set highscore
-            highestScore = PlayerPrefs.GetInt("highestScore", 0);
-            textHighScore.text = "HIGHSCORE: " + highestScore.ToString();
-
-            for (int i = 0; i < 11; i++)
-            {
-                alienIndexToFireProjectile[i] = 4;
-            }
-        } else
-        {
-            // beaten a wave so go straight back into game 
-            MainMenuCanvas.SetActive(false);
-            GameCanvas.SetActive(true);
-
-            PlayerPrefs.GetInt("scoreSoFar", sessionScore);
-            textCurrentScore.text = "SCORE: " + sessionScore.ToString();
-
-            textLivesLeft.text = "LIVES LEFT: 3";
-
-            for (int i = 0; i < 11; i++)
-            {
-                alienIndexToFireProjectile[i] = 4;
-            }
-
-            PlayButtonClicked();
-        }
-        
+            alienIndexToFireProjectile[i] = 4;
+        }       
 
     }
 
@@ -208,22 +185,17 @@ public class GameController : MonoBehaviour
 
                 }
 
-            }
+                if (waveBeat)
+                {
+                    // quick ending, just boot you back to main menu
+                    gameOverMethod();
 
-
-            if (waveBeat)
-            {
-                // reset level with faster moving enemies
-                // do this by switching scenes, then coming back to sample scene and everyuthing should be reset 
-                int waveNumber = PlayerPrefs.GetInt("wavesBeaten", 0);
-                PlayerPrefs.SetInt("wavesBeaten", waveNumber + 1);
-                PlayerPrefs.SetInt("scoreSoFar", sessionScore);
-
-
-                PlayerPrefs.Save();
-                SceneManager.LoadScene(1);
+                }
 
             }
+
+
+          
 
 
         }
@@ -286,6 +258,7 @@ public class GameController : MonoBehaviour
 
     public void gameOverMethod()
     {
+        gameStarted = false;
         // retrieve high score from PlayerPrefs
         highestScore = PlayerPrefs.GetInt("highestScore", 0);
 
@@ -306,6 +279,16 @@ public class GameController : MonoBehaviour
         // set highscore
         highestScore = PlayerPrefs.GetInt("highestScore", 0);
         textHighScore.text = "HIGHSCORE: " + highestScore.ToString();
+
+        // destroy all the old alien prefab instances
+        for(int i =0; i< AlienRows.Length; i++)
+        {
+            for(int j = 0; j < 11; j++)
+            {
+                Debug.Log("Destroying objects");
+                Destroy(AlienRows[i].transform.GetChild(0).gameObject);
+            }
+        }
     }
 
     private void OnDisable()
